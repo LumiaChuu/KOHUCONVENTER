@@ -1,0 +1,93 @@
+/* Anime Character Styles */
+.anime-character {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    transition: all 0.5s ease;
+    z-index: 10;
+    pointer-events: none;
+}
+
+/* Character positions */
+.character-upload {
+    bottom: 20px;
+    right: 20px;
+    transform: translateY(0);
+    animation: float 3s ease-in-out infinite;
+}
+
+.character-converting {
+    bottom: 50%;
+    right: 50%;
+    transform: translate(50%, 50%) scale(1.2);
+    animation: spin 1.5s linear infinite;
+}
+
+.character-success {
+    bottom: 20px;
+    right: 20px;
+    transform: translateY(0);
+    animation: jump 1s ease-in-out 2;
+}
+
+/* Character animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: translate(50%, 50%) rotate(0deg) scale(1.2);
+    }
+    100% {
+        transform: translate(50%, 50%) rotate(360deg) scale(1.2);
+    }
+}
+
+@keyframes jump {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Character expressions */
+.character-happy {
+    opacity: 1;
+}
+
+.character-working {
+    opacity: 1;
+}
+
+.character-excited {
+    opacity: 1;
+}
+
+/* Hide character on mobile */
+@media (max-width: 768px) {
+    .anime-character {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+@media (max-width: 480px) {
+    .anime-character {
+        width: 80px;
+        height: 80px;
+    }
+}

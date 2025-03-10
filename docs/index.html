@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KOHUCONVERTER - File Format Converter</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="anime-characters.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><span class="highlight">KOHU</span>CONVERTER</h1>
+            <p class="tagline">Convert your files easily and quickly</p>
+        </header>
+        
+        <!-- Anime character elements -->
+        <div id="animeCharacter" class="anime-character character-upload">
+            <img src="images/anime-happy.svg" alt="Anime character" class="character-happy">
+        </div>
+
+        <main>
+            <div class="converter-box">
+                <div class="upload-area" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag & Drop files here or</p>
+                    <label for="fileInput" class="upload-btn">Browse Files</label>
+                    <input type="file" id="fileInput" hidden>
+                </div>
+
+                <div class="conversion-options" id="conversionOptions" style="display: none;">
+                    <div class="file-info">
+                        <p>Selected file: <span id="fileName">No file selected</span></p>
+                        <p>File size: <span id="fileSize">0 KB</span></p>
+                    </div>
+
+                    <div class="format-selection">
+                        <label for="outputFormat">Convert to:</label>
+                        <select id="outputFormat">
+                            <!-- Options will be populated based on input file type -->
+                        </select>
+                    </div>
+
+                    <button id="convertBtn" class="convert-btn">Convert Now</button>
+                </div>
+
+                <div class="conversion-result" id="conversionResult" style="display: none;">
+                    <div class="result-info">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Conversion Complete!</p>
+                    </div>
+                    <a href="#" id="downloadBtn" class="download-btn">Download Converted File</a>
+                    <button id="newConversionBtn" class="new-conversion-btn">Convert Another File</button>
+                </div>
+            </div>
+
+            <div class="supported-formats">
+                <h2>Supported Formats</h2>
+                <div class="format-groups">
+                    <div class="format-group">
+                        <h3>Documents</h3>
+                        <p>PDF, DOCX, DOC, TXT, RTF, ODT</p>
+                    </div>
+                    <div class="format-group">
+                        <h3>Images</h3>
+                        <p>JPG, PNG, GIF, BMP, WEBP, SVG</p>
+                    </div>
+                    <div class="format-group">
+                        <h3>Audio</h3>
+                        <p>MP3, WAV, OGG, FLAC, AAC</p>
+                    </div>
+                    <div class="format-group">
+                        <h3>Video</h3>
+                        <p>MP4, AVI, MOV, MKV, WEBM</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p class="watermark">Powered by <span class="highlight">Dimas Ramadhan</span> of <span class="highlight">KOHUTECH</span></p>
+            <div class="social-links">
+                <a href="https://github.com/Haegel-byte" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/dimas-ramadhan-9a1534355/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script src="converter.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

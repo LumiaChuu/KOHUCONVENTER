@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Anime character - Working/Converting state -->
+  <style>
+    .st0{fill:#9370DB;} /* Medium purple for hair */
+    .st1{fill:#FFECEC;} /* Skin tone */
+    .st2{fill:#7B68EE;} /* Medium slate blue for details */
+    .st3{fill:#333333;} /* Dark for eyes and outlines */
+    .st4{fill:#FFFFFF;} /* White */
+  </style>
+  
+  <!-- Hair -->
+  <path class="st0" d="M100,30c-30,0-50,25-50,50c0,15,5,25,10,30c5,5,15,10,15,25c0,10,10,15,25,15s25-5,25-15c0-15,10-20,15-25c5-5,10-15,10-30C150,55,130,30,100,30z"/>
+  
+  <!-- Face -->
+  <circle class="st1" cx="100" cy="95" r="35"/>
+  
+  <!-- Eyes - concentrated look -->
+  <ellipse class="st3" cx="85" cy="90" rx="5" ry="3"/>
+  <ellipse class="st3" cx="115" cy="90" rx="5" ry="3"/>
+  
+  <!-- Sweat drop -->
+  <path class="st4" d="M130,85c0,0,5,5,5,10s-5,10-5,10" stroke="#7B68EE" stroke-width="2" fill="none"/>
+  <circle class="st4" cx="130" cy="105" r="3" stroke="#7B68EE" stroke-width="1"/>
+  
+  <!-- Focused mouth -->
+  <path class="st3" d="M90,105c5,0,10,0,20,0" stroke-width="2" stroke="#333333" fill="none"/>
+  
+  <!-- Gear/cog accessories to show working -->
+  <circle class="st2" cx="70" cy="55" r="10"/>
+  <circle class="st4" cx="70" cy="55" r="5"/>
+  <path class="st2" d="M70,40v5M70,65v5M55,55h5M80,55h5M60,45l3,3M77,62l3,3M60,65l3,-3M77,48l3,-3" stroke-width="2" stroke="#7B68EE" fill="none"/>
+  
+  <circle class="st2" cx="130" cy="55" r="10"/>
+  <circle class="st4" cx="130" cy="55" r="5"/>
+  <path class="st2" d="M130,40v5M130,65v5M115,55h5M140,55h5M120,45l3,3M137,62l3,3M120,65l3,-3M137,48l3,-3" stroke-width="2" stroke="#7B68EE" fill="none"/>
+</svg>

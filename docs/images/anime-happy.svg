@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Anime character - Happy state -->
+  <style>
+    .st0{fill:#FFB6C1;} /* Light pink for hair */
+    .st1{fill:#FFECEC;} /* Skin tone */
+    .st2{fill:#FF69B4;} /* Hot pink for details */
+    .st3{fill:#333333;} /* Dark for eyes and outlines */
+    .st4{fill:#FFFFFF;} /* White */
+  </style>
+  
+  <!-- Hair -->
+  <path class="st0" d="M100,30c-30,0-50,25-50,50c0,15,5,25,10,30c5,5,15,10,15,25c0,10,10,15,25,15s25-5,25-15c0-15,10-20,15-25c5-5,10-15,10-30C150,55,130,30,100,30z"/>
+  
+  <!-- Face -->
+  <circle class="st1" cx="100" cy="95" r="35"/>
+  
+  <!-- Eyes -->
+  <ellipse class="st3" cx="85" cy="90" rx="5" ry="7"/>
+  <ellipse class="st3" cx="115" cy="90" rx="5" ry="7"/>
+  <ellipse class="st4" cx="83" cy="87" rx="2" ry="2"/>
+  <ellipse class="st4" cx="113" cy="87" rx="2" ry="2"/>
+  
+  <!-- Blush -->
+  <ellipse class="st2" cx="75" cy="100" rx="10" ry="5" opacity="0.5"/>
+  <ellipse class="st2" cx="125" cy="100" rx="10" ry="5" opacity="0.5"/>
+  
+  <!-- Happy mouth -->
+  <path class="st3" d="M85,105c10,10,20,10,30,0" stroke-width="2" stroke="#333333" fill="none"/>
+  
+  <!-- Hair accessories -->
+  <circle class="st2" cx="75" cy="60" r="8"/>
+  <circle class="st2" cx="125" cy="60" r="8"/>
+</svg>

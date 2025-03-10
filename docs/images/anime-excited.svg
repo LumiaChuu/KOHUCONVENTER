@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Anime character - Excited state -->
+  <style>
+    .st0{fill:#FFA500;} /* Orange for hair */
+    .st1{fill:#FFECEC;} /* Skin tone */
+    .st2{fill:#FF4500;} /* Orange-red for details */
+    .st3{fill:#333333;} /* Dark for eyes and outlines */
+    .st4{fill:#FFFFFF;} /* White */
+    .st5{fill:#FFD700;} /* Gold for sparkles */
+  </style>
+  
+  <!-- Hair -->
+  <path class="st0" d="M100,30c-30,0-50,25-50,50c0,15,5,25,10,30c5,5,15,10,15,25c0,10,10,15,25,15s25-5,25-15c0-15,10-20,15-25c5-5,10-15,10-30C150,55,130,30,100,30z"/>
+  
+  <!-- Face -->
+  <circle class="st1" cx="100" cy="95" r="35"/>
+  
+  <!-- Eyes - excited with stars -->
+  <path class="st5" d="M85,90l2-6l2,6l6,2l-6,2l-2,6l-2-6l-6-2L85,90z" />
+  <path class="st5" d="M115,90l2-6l2,6l6,2l-6,2l-2,6l-2-6l-6-2L115,90z" />
+  
+  <!-- Blush -->
+  <ellipse class="st2" cx="75" cy="100" rx="10" ry="5" opacity="0.7"/>
+  <ellipse class="st2" cx="125" cy="100" rx="10" ry="5" opacity="0.7"/>
+  
+  <!-- Excited mouth -->
+  <path class="st3" d="M85,105c5,8,25,8,30,0" stroke-width="2" stroke="#333333" fill="none"/>
+  
+  <!-- Hair accessories and sparkles -->
+  <circle class="st2" cx="75" cy="60" r="8"/>
+  <circle class="st2" cx="125" cy="60" r="8"/>
+  
+  <!-- Sparkles around character -->
+  <path class="st5" d="M50,70l3-9l3,9l9,3l-9,3l-3,9l-3-9l-9-3L50,70z" />
+  <path class="st5" d="M150,70l2-6l2,6l6,2l-6,2l-2,6l-2-6l-6-2L150,70z" />
+  <path class="st5" d="M130,140l2-6l2,6l6,2l-6,2l-2,6l-2-6l-6-2L130,140z" />
+  <path class="st5" d="M70,140l2-6l2,6l6,2l-6,2l-2,6l-2-6l-6-2L70,140z" />
+</svg>
