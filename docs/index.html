@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="KOHUCONVERTER - Easily convert your files between various formats including documents, images, audio, and video.">
     <title>KOHUCONVERTER - File Format Converter</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="anime-characters.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div class="container">
@@ -15,21 +16,20 @@
             <p class="tagline">Convert your files easily and quickly</p>
         </header>
         
-        <!-- Anime character elements -->
         <div id="animeCharacter" class="anime-character character-upload">
             <img src="images/anime-happy.svg" alt="Anime character" class="character-happy">
         </div>
 
         <main>
-            <div class="converter-box">
-                <div class="upload-area" id="dropZone">
+            <section class="converter-box" aria-labelledby="converterBoxHeading">
+                <h2 id="converterBoxHeading" class="visually-hidden">File Converter</h2> <div class="upload-area" id="dropZone">
                     <i class="fas fa-cloud-upload-alt"></i>
                     <p>Drag & Drop files here or</p>
                     <label for="fileInput" class="upload-btn">Browse Files</label>
                     <input type="file" id="fileInput" hidden>
                 </div>
 
-                <div class="conversion-options" id="conversionOptions" style="display: none;">
+                <div class="conversion-options" id="conversionOptions" style="display: none;" aria-live="polite">
                     <div class="file-info">
                         <p>Selected file: <span id="fileName">No file selected</span></p>
                         <p>File size: <span id="fileSize">0 KB</span></p>
@@ -38,25 +38,23 @@
                     <div class="format-selection">
                         <label for="outputFormat">Convert to:</label>
                         <select id="outputFormat">
-                            <!-- Options will be populated based on input file type -->
-                        </select>
+                            </select>
                     </div>
 
                     <button id="convertBtn" class="convert-btn">Convert Now</button>
                 </div>
 
-                <div class="conversion-result" id="conversionResult" style="display: none;">
+                <div class="conversion-result" id="conversionResult" style="display: none;" aria-live="polite">
                     <div class="result-info">
                         <i class="fas fa-check-circle"></i>
                         <p>Conversion Complete!</p>
                     </div>
-                    <a href="#" id="downloadBtn" class="download-btn">Download Converted File</a>
-                    <button id="newConversionBtn" class="new-conversion-btn">Convert Another File</button>
+                    <a href="#" id="downloadBtn" class="download-btn" download>Download Converted File</a> <button id="newConversionBtn" class="new-conversion-btn">Convert Another File</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="supported-formats">
-                <h2>Supported Formats</h2>
+            <section class="supported-formats" aria-labelledby="supportedFormatsHeading">
+                <h2 id="supportedFormatsHeading">Supported Formats</h2>
                 <div class="format-groups">
                     <div class="format-group">
                         <h3>Documents</h3>
@@ -75,14 +73,14 @@
                         <p>MP4, AVI, MOV, MKV, WEBM</p>
                     </div>
                 </div>
-            </div>
+            </section>
         </main>
 
         <footer>
             <p class="watermark">Powered by <span class="highlight">Dimas Ramadhan</span> of <span class="highlight">KOHUTECH</span></p>
             <div class="social-links">
-                <a href="https://github.com/Haegel-byte" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://www.linkedin.com/in/dimas-ramadhan-9a1534355/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="https://github.com/Haegel-byte" target="_blank" aria-label="GitHub Profile"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/dimas-ramadhan-9a1534355/" target="_blank" aria-label="LinkedIn Profile"><i class="fab fa-linkedin"></i></a>
             </div>
         </footer>
     </div>
