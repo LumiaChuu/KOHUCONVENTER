@@ -3,23 +3,30 @@
     position: absolute;
     width: 150px;
     height: 150px;
-    transition: all 0.5s ease;
+    transition: all 0.5s ease; /* 'all' is acceptable here for simplicity if multiple properties change during state transitions */
     z-index: 10;
     pointer-events: none;
 }
 
-/* Character positions */
-.character-upload {
+/* Character positions and base states */
+.character-upload { /* Initial state */
     bottom: 20px;
     right: 20px;
     transform: translateY(0);
     animation: float 3s ease-in-out infinite;
 }
 
+.character-file-selected { /* When a file is selected, before conversion */
+    bottom: 50px; /* Example style, can be defined as needed */
+    right: 50px;
+    /* Add any other specific styles or animations for this state */
+}
+
 .character-converting {
     bottom: 50%;
     right: 50%;
-    transform: translate(50%, 50%) scale(1.2);
+    /* The transform translate(50%, 50%) effectively centers the element's own center point at the bottom/right: 50%/50% of the parent */
+    transform: translate(50%, 50%) scale(1.2); 
     animation: spin 1.5s linear infinite;
 }
 
@@ -27,7 +34,7 @@
     bottom: 20px;
     right: 20px;
     transform: translateY(0);
-    animation: jump 1s ease-in-out 2;
+    animation: jump 1s ease-in-out 2; /* Runs twice */
 }
 
 /* Character animations */
@@ -45,6 +52,7 @@
 
 @keyframes spin {
     0% {
+        /* Start with the base transform of .character-converting if not already applied or to be explicit */
         transform: translate(50%, 50%) rotate(0deg) scale(1.2);
     }
     100% {
@@ -53,31 +61,23 @@
 }
 
 @keyframes jump {
-    0% {
+    0%, 100% { /* Combined 0% and 100% */
         transform: translateY(0);
     }
     50% {
         transform: translateY(-20px);
     }
-    100% {
-        transform: translateY(0);
-    }
 }
 
-/* Character expressions */
-.character-happy {
-    opacity: 1;
-}
-
-.character-working {
-    opacity: 1;
-}
-
+/* Character expressions (applied to the img tag itself via JS innerHTML change) */
+.character-happy,
+.character-working,
 .character-excited {
-    opacity: 1;
+    opacity: 1; /* Ensures visibility, useful if there was a default opacity:0 or for explicit control */
+    /* These classes primarily serve as selectors for JS to change the image source */
 }
 
-/* Hide character on mobile */
+/* Hide/resize character on mobile */
 @media (max-width: 768px) {
     .anime-character {
         width: 100px;
@@ -87,7 +87,7 @@
 
 @media (max-width: 480px) {
     .anime-character {
-        width: 80px;
+        width: 80px; /* Adjusted for smaller screens */
         height: 80px;
     }
 }
