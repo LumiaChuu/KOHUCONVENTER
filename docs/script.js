@@ -2,12 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
-    const fileName = document.getElementById('fileName');
-    const fileSize = document.getElementById('fileSize');
-    const outputFormat = document.getElementById('outputFormat');
-    const conversionOptions = document.getElementById('conversionOptions');
+    const fileNameDisplay = document.getElementById('fileName'); // Renamed for clarity
+    const fileSizeDisplay = document.getElementById('fileSize'); // Renamed for clarity
+    const outputFormatSelect = document.getElementById('outputFormat'); // Renamed for clarity
+    const conversionOptionsDiv = document.getElementById('conversionOptions'); // Renamed for clarity
     const convertBtn = document.getElementById('convertBtn');
-    const conversionResult = document.getElementById('conversionResult');
+    const conversionResultDiv = document.getElementById('conversionResult'); // Renamed for clarity
     const downloadBtn = document.getElementById('downloadBtn');
     const newConversionBtn = document.getElementById('newConversionBtn');
     const animeCharacter = document.getElementById('animeCharacter');
@@ -24,12 +24,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Image formats
         'jpg': ['png', 'gif', 'bmp', 'webp', 'svg'],
-        'jpeg': ['png', 'gif', 'bmp', 'webp', 'svg'],
+        'jpeg': ['png', 'gif', 'bmp', 'webp', 'svg'], // jpeg is alias for jpg
         'png': ['jpg', 'gif', 'bmp', 'webp', 'svg'],
-        'gif': ['jpg', 'png', 'bmp', 'webp'],
+        'gif': ['jpg', 'png', 'bmp', 'webp'], // GIF to SVG is less common directly
         'bmp': ['jpg', 'png', 'gif', 'webp', 'svg'],
         'webp': ['jpg', 'png', 'gif', 'bmp', 'svg'],
-        'svg': ['jpg', 'png', 'bmp', 'webp'],
+        'svg': ['png', 'jpg', 'webp'], // SVG to BMP/GIF is less common directly via canvas
         
         // Audio formats
         'mp3': ['wav', 'ogg', 'flac', 'aac'],
@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Variables to store the current file
     let currentFile = null;
     let convertedBlob = null;
+    let downloadUrl = null; // Store the object URL to revoke it properly
 
     // Event Listeners
     dropZone.addEventListener('dragover', handleDragOver);
@@ -58,188 +59,176 @@ document.addEventListener('DOMContentLoaded', function() {
     convertBtn.addEventListener('click', handleConversion);
     newConversionBtn.addEventListener('click', resetConverter);
 
-    // Handle drag over event
+    // Single event listener for download button
+    downloadBtn.addEventListener('click', function() {
+        if (this.href && this.href.startsWith('blob:')) {
+            // URL.revokeObjectURL should be called after the download has initiated.
+            // A timeout helps ensure this.
+            const urlToRevoke = this.href;
+            setTimeout(() => {
+                URL.revokeObjectURL(urlToRevoke);
+                downloadUrl = null; // Clear the stored URL
+            }, 150);
+        }
+        // Allow default link behavior (download)
+    });
+
     function handleDragOver(e) {
         e.preventDefault();
         e.stopPropagation();
         dropZone.classList.add('active');
     }
 
-    // Handle drag leave event
     function handleDragLeave(e) {
         e.preventDefault();
         e.stopPropagation();
         dropZone.classList.remove('active');
     }
 
-    // Handle file drop event
     function handleFileDrop(e) {
         e.preventDefault();
         e.stopPropagation();
         dropZone.classList.remove('active');
         
-        if (e.dataTransfer.files.length) {
+        if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
             processFile(e.dataTransfer.files[0]);
         }
     }
 
-    // Handle file selection from input
     function handleFileSelect(e) {
-        if (fileInput.files.length) {
+        if (fileInput.files && fileInput.files.length > 0) {
             processFile(fileInput.files[0]);
         }
     }
 
-    // Process the selected file
     function processFile(file) {
         currentFile = file;
         
-        // Display file info
-        fileName.textContent = file.name;
-        fileSize.textContent = formatFileSize(file.size);
+        fileNameDisplay.textContent = file.name;
+        fileSizeDisplay.textContent = formatFileSize(file.size);
         
-        // Get file extension and populate output format options
         const fileExtension = getFileExtension(file.name).toLowerCase();
         populateOutputFormats(fileExtension);
         
-        // Show conversion options
         dropZone.style.display = 'none';
-        conversionOptions.style.display = 'block';
-        conversionResult.style.display = 'none';
+        conversionOptionsDiv.style.display = 'block';
+        conversionResultDiv.style.display = 'none';
         
-        // Slightly change anime character position
-        animeCharacter.style.bottom = '50px';
-        animeCharacter.style.right = '50px';
+        // Change anime character to a "file selected" state using classes
+        animeCharacter.className = 'anime-character character-file-selected'; // Define .character-file-selected in CSS
+        // Ensure the image source is appropriate for this state if needed
+        // animeCharacter.innerHTML = '<img src="images/anime-thinking.svg" alt="Anime character thinking" class="character-happy">';
     }
 
-    // Get file extension
     function getFileExtension(filename) {
-        return filename.split('.').pop();
+        return filename.substring(filename.lastIndexOf('.') + 1) || filename;
     }
 
-    // Format file size
     function formatFileSize(bytes) {
         if (bytes === 0) return '0 Bytes';
-        
         const k = 1024;
         const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        
+        const i = Math.max(0, Math.floor(Math.log(bytes) / Math.log(k))); // Ensure i is not negative
         return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
     }
 
-    // Populate output format options based on input file type
     function populateOutputFormats(inputFormat) {
-        // Clear existing options
-        outputFormat.innerHTML = '';
+        outputFormatSelect.innerHTML = ''; // Clear existing options
         
-        // Get available formats for conversion
         const availableFormats = formatMapping[inputFormat] || [];
         
-        // Add options to select element
-        availableFormats.forEach(format => {
-            const option = document.createElement('option');
-            option.value = format;
-            option.textContent = format.toUpperCase();
-            outputFormat.appendChild(option);
-        });
-        
-        // If no formats available, show message
         if (availableFormats.length === 0) {
             const option = document.createElement('option');
             option.value = '';
             option.textContent = 'No conversion available for this file type';
-            outputFormat.appendChild(option);
+            outputFormatSelect.appendChild(option);
             convertBtn.disabled = true;
         } else {
+            availableFormats.forEach(format => {
+                const option = document.createElement('option');
+                option.value = format;
+                option.textContent = format.toUpperCase();
+                outputFormatSelect.appendChild(option);
+            });
             convertBtn.disabled = false;
         }
     }
 
-    // Handle conversion process
-    function handleConversion() {
-        // Show loading state
+    function displayError(message) {
+        // TODO: Implement a more user-friendly error display instead of alert
+        // For example, show the message in a dedicated div within .converter-box
+        console.error(message); // Keep console log for debugging
+        alert(message); // Placeholder, replace with better UI feedback
+    }
+
+    async function handleConversion() {
+        if (!currentFile || !outputFormatSelect.value) {
+            displayError('Please select a file and a target format.');
+            return;
+        }
+
         convertBtn.textContent = 'Converting...';
         convertBtn.disabled = true;
         
-        // Change anime character to working state
         animeCharacter.className = 'anime-character character-converting';
-        animeCharacter.innerHTML = '<img src="images/anime-working.svg" alt="Anime character working" class="character-working">';
-        
-        // Perform the actual conversion
-        simulateConversion()
-            .then(() => {
-                // Show conversion result
-                conversionOptions.style.display = 'none';
-                conversionResult.style.display = 'block';
-                
-                // Change anime character to excited state
-                animeCharacter.className = 'anime-character character-success';
-                animeCharacter.innerHTML = '<img src="images/anime-excited.svg" alt="Anime character excited" class="character-excited">';
-            })
-            .catch(error => {
-                // Show error message
-                alert(`Conversion failed: ${error.message}`);
-                
-                // Change anime character back to happy state
-                animeCharacter.className = 'anime-character character-upload';
-                animeCharacter.innerHTML = '<img src="images/anime-happy.svg" alt="Anime character" class="character-happy">';
-            })
-            .finally(() => {
-                // Reset convert button
-                convertBtn.textContent = 'Convert Now';
-                convertBtn.disabled = false;
-            });
-    }
-
-    // Perform actual file conversion using the FormatConverter
-    async function simulateConversion() {
-        const selectedFormat = outputFormat.value;
-        const originalName = currentFile.name;
-        const baseName = originalName.substring(0, originalName.lastIndexOf('.'));
+        animeCharacter.innerHTML = '<img src="images/anime-working.svg" alt="Anime character working" class="character-working">'; //
         
         try {
-            // Create an instance of the FormatConverter
-            const converter = new FormatConverter();
+            const selectedFormat = outputFormatSelect.value;
+            const originalName = currentFile.name;
+            const baseName = originalName.substring(0, originalName.lastIndexOf('.'));
             
-            // Perform the actual conversion
-            convertedBlob = await converter.convertFile(currentFile, selectedFormat);
+            const converter = new FormatConverter(); // Assuming FormatConverter is globally available
+            convertedBlob = await converter.convertFile(currentFile, selectedFormat); //
             
-            // Set download link
-            const downloadUrl = URL.createObjectURL(convertedBlob);
-            downloadBtn.href = downloadUrl;
-            downloadBtn.download = `${baseName}.${selectedFormat}`;
+            if (downloadUrl) { // Revoke previous blob URL if exists
+                URL.revokeObjectURL(downloadUrl);
+            }
+            downloadUrl = URL.createObjectURL(convertedBlob); //
             
-            // Add event listener to revoke object URL after download
-            downloadBtn.addEventListener('click', () => {
-                setTimeout(() => {
-                    URL.revokeObjectURL(downloadUrl);
-                }, 100);
-            });
+            downloadBtn.href = downloadUrl; //
+            downloadBtn.download = `${baseName}.${selectedFormat}`; //
+            
+            conversionOptionsDiv.style.display = 'none';
+            conversionResultDiv.style.display = 'block';
+            
+            animeCharacter.className = 'anime-character character-success';
+            animeCharacter.innerHTML = '<img src="images/anime-excited.svg" alt="Anime character excited" class="character-excited">'; //
+
         } catch (error) {
-            console.error('Conversion error:', error);
-            alert(`Conversion failed: ${error.message}`);
+            displayError(`Conversion failed: ${error.message}`);
+            animeCharacter.className = 'anime-character character-upload'; // Reset to initial
+            animeCharacter.innerHTML = '<img src="images/anime-happy.svg" alt="Anime character" class="character-happy">'; //
+        } finally {
+            convertBtn.textContent = 'Convert Now';
+            // convertBtn.disabled = false; // Keep disabled until a new file or format is chosen or reset
         }
     }
 
-    // Reset converter to initial state
     function resetConverter() {
-        // Reset file input
-        fileInput.value = '';
+        fileInput.value = ''; // Clear file input
         currentFile = null;
         
-        // Reset UI
-        dropZone.style.display = 'block';
-        conversionOptions.style.display = 'none';
-        conversionResult.style.display = 'none';
-        
-        // Reset anime character to happy state
-        animeCharacter.className = 'anime-character character-upload';
-        animeCharacter.innerHTML = '<img src="images/anime-happy.svg" alt="Anime character" class="character-happy">';
-        
-        // Revoke any object URLs
-        if (downloadBtn.href && downloadBtn.href.startsWith('blob:')) {
-            URL.revokeObjectURL(downloadBtn.href);
+        if (downloadUrl) { // Revoke object URL if one was created
+            URL.revokeObjectURL(downloadUrl);
+            downloadUrl = null;
         }
+        downloadBtn.removeAttribute('href'); // Clear href
+        downloadBtn.removeAttribute('download');
+
+
+        dropZone.style.display = 'block';
+        conversionOptionsDiv.style.display = 'none';
+        conversionResultDiv.style.display = 'none';
+        
+        fileNameDisplay.textContent = 'No file selected';
+        fileSizeDisplay.textContent = '0 KB';
+        outputFormatSelect.innerHTML = ''; // Clear format options
+        
+        animeCharacter.className = 'anime-character character-upload';
+        animeCharacter.innerHTML = '<img src="images/anime-happy.svg" alt="Anime character" class="character-happy">'; //
+        
+        convertBtn.disabled = true; // Disable convert button until new file selected
+        convertBtn.textContent = 'Convert Now';
     }
 });
