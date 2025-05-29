@@ -1,4 +1,4 @@
 {
   "version": 2,
-  "private": "docs"
+  "public": "docs"
 }
