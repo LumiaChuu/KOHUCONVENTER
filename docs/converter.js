@@ -7,15 +7,15 @@ class FormatConverter {
     constructor() {
         // Map of conversion handlers by source and target format
         this.conversionHandlers = {
-            // Document conversions
+            // Document conversions (Placeholders - require server-side or heavy client-side libraries)
             'pdf-to-docx': this.pdfToDocx,
             'docx-to-pdf': this.docxToPdf,
-            'doc-to-pdf': this.docxToPdf,
+            'doc-to-pdf': this.docxToPdf, // Assuming doc can be handled like docx for placeholder
             'pdf-to-txt': this.pdfToText,
             'docx-to-txt': this.docxToText,
-            'doc-to-txt': this.docxToText,
+            'doc-to-txt': this.docxToText, // Assuming doc can be handled like docx for placeholder
             
-            // Image conversions
+            // Image conversions (Client-side capable for some formats)
             'jpg-to-png': this.convertImage,
             'png-to-jpg': this.convertImage,
             'webp-to-jpg': this.convertImage,
@@ -25,13 +25,13 @@ class FormatConverter {
             'svg-to-png': this.svgToRaster,
             'svg-to-jpg': this.svgToRaster,
             
-            // Audio conversions
+            // Audio conversions (Placeholders - typically require server-side or WebAssembly)
             'mp3-to-wav': this.convertAudio,
             'wav-to-mp3': this.convertAudio,
             'ogg-to-mp3': this.convertAudio,
             'flac-to-mp3': this.convertAudio,
             
-            // Video conversions
+            // Video conversions (Placeholders - almost exclusively require server-side processing)
             'mp4-to-webm': this.convertVideo,
             'webm-to-mp4': this.convertVideo,
             'mp4-to-avi': this.convertVideo,
@@ -40,116 +40,75 @@ class FormatConverter {
     }
 
     /**
-     * Convert a file from one format to another
-     * @param {File} file - The file to convert
-     * @param {string} targetFormat - The format to convert to
-     * @returns {Promise<Blob>} - A promise that resolves to the converted file as a Blob
+     * Convert a file from one format to another.
+     * @param {File} file - The file to convert.
+     * @param {string} targetFormat - The format to convert to (e.g., 'png', 'docx').
+     * @returns {Promise<Blob>} - A promise that resolves to the converted file as a Blob.
      */
     async convertFile(file, targetFormat) {
         const sourceFormat = this.getFileExtension(file.name).toLowerCase();
         const conversionKey = `${sourceFormat}-to-${targetFormat}`;
         
-        // Check if we have a handler for this conversion
-        if (this.conversionHandlers[conversionKey]) {
+        const handler = this.conversionHandlers[conversionKey];
+        if (handler) {
             try {
-                return await this.conversionHandlers[conversionKey].call(this, file, targetFormat);
+                // Call the handler with 'this' context bound to the FormatConverter instance
+                return await handler.call(this, file, targetFormat);
             } catch (error) {
                 console.error(`Error converting ${sourceFormat} to ${targetFormat}:`, error);
-                throw new Error(`Conversion from ${sourceFormat.toUpperCase()} to ${targetFormat.toUpperCase()} failed. Please try again.`);
+                // Provide a more specific error message if possible, or a generic one
+                throw new Error(`Conversion from ${sourceFormat.toUpperCase()} to ${targetFormat.toUpperCase()} failed. ${error.message || 'Please try again.'}`);
             }
         } else {
-            // Fallback to basic conversion for unsupported formats
-            console.warn(`No specific handler for ${conversionKey}, using fallback`);
+            console.warn(`No specific handler for ${conversionKey}, attempting fallback.`);
+            // Fallback for unsupported direct conversions (might just change MIME type)
             return this.fallbackConversion(file, targetFormat);
         }
     }
 
     /**
-     * Get file extension from filename
-     * @param {string} filename - The filename
-     * @returns {string} - The file extension
+     * Get file extension from filename.
+     * @param {string} filename - The filename.
+     * @returns {string} - The file extension without the dot.
      */
     getFileExtension(filename) {
-        return filename.split('.').pop();
+        return filename.substring(filename.lastIndexOf('.') + 1) || filename;
     }
 
-    /**
-     * Convert PDF to DOCX
-     * @param {File} file - The PDF file
-     * @returns {Promise<Blob>} - A promise that resolves to the converted DOCX file
-     */
+    // --- Placeholder Document Conversion Methods ---
     async pdfToDocx(file) {
-        // In a real implementation, you would use a library like pdf.js and docx.js
-        // For now, we'll simulate the conversion with proper metadata
+        console.warn('pdfToDocx: Placeholder conversion. Actual conversion requires a library.');
         const arrayBuffer = await file.arrayBuffer();
-        
-        // Here you would process the PDF content and create a proper DOCX file
-        // This is a placeholder for the actual conversion logic
-        
-        // For demonstration, we're creating a blob with the correct MIME type
         return new Blob([arrayBuffer], { 
             type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
         });
     }
 
-    /**
-     * Convert DOCX to PDF
-     * @param {File} file - The DOCX file
-     * @returns {Promise<Blob>} - A promise that resolves to the converted PDF file
-     */
     async docxToPdf(file) {
-        // In a real implementation, you would use a library like docx.js and pdf-lib
+        console.warn('docxToPdf: Placeholder conversion. Actual conversion requires a library.');
         const arrayBuffer = await file.arrayBuffer();
-        
-        // Here you would process the DOCX content and create a proper PDF file
-        // This is a placeholder for the actual conversion logic
-        
         return new Blob([arrayBuffer], { type: 'application/pdf' });
     }
 
-    /**
-     * Extract text from PDF
-     * @param {File} file - The PDF file
-     * @returns {Promise<Blob>} - A promise that resolves to the extracted text as a Blob
-     */
     async pdfToText(file) {
-        // In a real implementation, you would use a library like pdf.js
-        const arrayBuffer = await file.arrayBuffer();
-        
-        // Here you would extract text from the PDF
-        // This is a placeholder for the actual extraction logic
-        
-        const text = "This is extracted text from the PDF file. In a real implementation, this would contain the actual text content from the PDF.";
+        console.warn('pdfToText: Placeholder conversion. Actual PDF text extraction requires a library.');
+        const arrayBuffer = await file.arrayBuffer(); // In real scenario, process this buffer
+        const text = `Placeholder: Extracted text from ${file.name}. Full implementation needed.`;
         return new Blob([text], { type: 'text/plain' });
     }
 
-    /**
-     * Extract text from DOCX
-     * @param {File} file - The DOCX file
-     * @returns {Promise<Blob>} - A promise that resolves to the extracted text as a Blob
-     */
     async docxToText(file) {
-        // In a real implementation, you would use a library like mammoth.js
-        const arrayBuffer = await file.arrayBuffer();
-        
-        // Here you would extract text from the DOCX
-        // This is a placeholder for the actual extraction logic
-        
-        const text = "This is extracted text from the DOCX file. In a real implementation, this would contain the actual text content from the document.";
+        console.warn('docxToText: Placeholder conversion. Actual DOCX text extraction requires a library.');
+        const arrayBuffer = await file.arrayBuffer(); // In real scenario, process this buffer
+        const text = `Placeholder: Extracted text from ${file.name}. Full implementation needed.`;
         return new Blob([text], { type: 'text/plain' });
     }
 
-    /**
-     * Convert between image formats
-     * @param {File} file - The image file
-     * @param {string} targetFormat - The target format
-     * @returns {Promise<Blob>} - A promise that resolves to the converted image as a Blob
-     */
+    // --- Image Conversion Methods (Client-Side) ---
     async convertImage(file, targetFormat) {
-        // In a real implementation, you would use the Canvas API or a library like sharp
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = () => {
+            reader.onload = (e) => {
                 const img = new Image();
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
@@ -158,9 +117,8 @@ class FormatConverter {
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0);
                     
-                    // Convert to the target format
                     let mimeType;
-                    switch (targetFormat) {
+                    switch (targetFormat.toLowerCase()) {
                         case 'jpg':
                         case 'jpeg':
                             mimeType = 'image/jpeg';
@@ -172,179 +130,137 @@ class FormatConverter {
                             mimeType = 'image/webp';
                             break;
                         default:
-                            mimeType = 'image/png';
+                            // Should not happen if formatMapping is correct
+                            reject(new Error(`Unsupported target image format: ${targetFormat}`));
+                            return;
                     }
                     
                     canvas.toBlob(blob => {
-                        resolve(blob);
-                    }, mimeType, 0.92); // Quality parameter for JPEG and WEBP
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Canvas toBlob conversion failed.'));
+                        }
+                    }, mimeType, 0.92); // Quality for JPEG/WEBP
                 };
-                img.onerror = () => {
-                    reject(new Error('Failed to load image for conversion'));
-                };
-                img.src = reader.result;
+                img.onerror = () => reject(new Error('Failed to load image for conversion. The image may be corrupt or in an unsupported format.'));
+                img.src = e.target.result;
             };
-            reader.onerror = () => {
-                reject(new Error('Failed to read image file'));
-            };
+            reader.onerror = () => reject(new Error('Failed to read image file.'));
             reader.readAsDataURL(file);
         });
     }
 
-    /**
-     * Convert SVG to raster format (PNG/JPG)
-     * @param {File} file - The SVG file
-     * @param {string} targetFormat - The target format (png or jpg)
-     * @returns {Promise<Blob>} - A promise that resolves to the converted image as a Blob
-     */
     async svgToRaster(file, targetFormat) {
-        // In a real implementation, you would render the SVG to a canvas
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = () => {
-                const svgText = reader.result;
-                const parser = new DOMParser();
-                const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
-                const svg = svgDoc.documentElement;
+            reader.onload = (e_reader) => {
+                const svgText = e_reader.target.result;
                 
-                // Create an image from the SVG
                 const img = new Image();
-                const svgBlob = new Blob([svgText], {type: 'image/svg+xml'});
+                // For security and proper rendering, it's often better to use a data URL for the SVG source
+                const svgBlob = new Blob([svgText], {type: 'image/svg+xml;charset=utf-8'});
                 const url = URL.createObjectURL(svgBlob);
-                
+
                 img.onload = () => {
-                    // Create a canvas to render the image
+                    // Use naturalWidth/Height for SVG if viewBox is tricky or for consistency
                     const canvas = document.createElement('canvas');
-                    canvas.width = svg.viewBox.baseVal.width || 300;
-                    canvas.height = svg.viewBox.baseVal.height || 150;
+                    // Attempt to get dimensions from SVG viewBox or attributes, else use img natural dimensions
+                    const parser = new DOMParser();
+                    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+                    const svgElement = svgDoc.documentElement;
+                    
+                    let width = parseFloat(svgElement.getAttribute('width')) || (svgElement.viewBox.baseVal && svgElement.viewBox.baseVal.width) || img.naturalWidth || 300;
+                    let height = parseFloat(svgElement.getAttribute('height')) || (svgElement.viewBox.baseVal && svgElement.viewBox.baseVal.height) || img.naturalHeight || 150;
+                    
+                    // Cap dimensions to avoid overly large canvases from malformed SVGs
+                    width = Math.min(width, 4096); 
+                    height = Math.min(height, 4096);
+
+                    canvas.width = width;
+                    canvas.height = height;
+
                     const ctx = canvas.getContext('2d');
+                    // Optionally fill canvas with a background color if SVG transparency is not desired for JPG
+                    if (targetFormat.toLowerCase() === 'jpg' || targetFormat.toLowerCase() === 'jpeg') {
+                        ctx.fillStyle = '#FFFFFF'; // White background
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                     
-                    // Convert to the target format
-                    const mimeType = targetFormat === 'jpg' ? 'image/jpeg' : 'image/png';
+                    const mimeType = (targetFormat.toLowerCase() === 'jpg' || targetFormat.toLowerCase() === 'jpeg') ? 'image/jpeg' : 'image/png';
                     canvas.toBlob(blob => {
-                        URL.revokeObjectURL(url);
-                        resolve(blob);
-                    }, mimeType, 0.92);
+                        URL.revokeObjectURL(url); // Clean up blob URL
+                        if (blob) {
+                            resolve(blob);
+                        } else {
+                            reject(new Error('Canvas toBlob conversion failed for SVG.'));
+                        }
+                    }, mimeType, 0.92); // Quality for JPEG
                 };
-                
                 img.onerror = () => {
                     URL.revokeObjectURL(url);
-                    reject(new Error('Failed to load SVG for conversion'));
+                    reject(new Error('Failed to load SVG into image element. The SVG might be malformed or contain unsupported features.'));
                 };
-                
-                img.src = url;
+                img.src = url; // Use object URL for image source
             };
-            reader.onerror = () => {
-                reject(new Error('Failed to read SVG file'));
-            };
-            reader.readAsText(file);
+            reader.onerror = () => reject(new Error('Failed to read SVG file.'));
+            reader.readAsText(file); // Read SVG as text
         });
     }
 
-    /**
-     * Convert between audio formats
-     * @param {File} file - The audio file
-     * @param {string} targetFormat - The target format
-     * @returns {Promise<Blob>} - A promise that resolves to the converted audio as a Blob
-     */
+    // --- Placeholder Audio/Video Conversion Methods ---
     async convertAudio(file, targetFormat) {
-        // In a real implementation, you would use the Web Audio API or a server-side solution
-        // This is a placeholder that just changes the MIME type
+        console.warn(`convertAudio to ${targetFormat}: Placeholder. Actual audio conversion is complex.`);
         const arrayBuffer = await file.arrayBuffer();
-        
-        let mimeType;
-        switch (targetFormat) {
-            case 'mp3':
-                mimeType = 'audio/mpeg';
-                break;
-            case 'wav':
-                mimeType = 'audio/wav';
-                break;
-            case 'ogg':
-                mimeType = 'audio/ogg';
-                break;
-            case 'flac':
-                mimeType = 'audio/flac';
-                break;
-            default:
-                mimeType = 'audio/mpeg';
-        }
-        
+        let mimeType = 'audio/mpeg'; // Default to mp3
+        if (targetFormat === 'wav') mimeType = 'audio/wav';
+        else if (targetFormat === 'ogg') mimeType = 'audio/ogg';
+        else if (targetFormat === 'flac') mimeType = 'audio/flac';
         return new Blob([arrayBuffer], { type: mimeType });
     }
 
-    /**
-     * Convert between video formats
-     * @param {File} file - The video file
-     * @param {string} targetFormat - The target format
-     * @returns {Promise<Blob>} - A promise that resolves to the converted video as a Blob
-     */
     async convertVideo(file, targetFormat) {
-        // Video conversion typically requires server-side processing
-        // This is a placeholder that just changes the MIME type
+        console.warn(`convertVideo to ${targetFormat}: Placeholder. Actual video conversion is highly resource-intensive.`);
         const arrayBuffer = await file.arrayBuffer();
-        
-        let mimeType;
-        switch (targetFormat) {
-            case 'mp4':
-                mimeType = 'video/mp4';
-                break;
-            case 'webm':
-                mimeType = 'video/webm';
-                break;
-            case 'avi':
-                mimeType = 'video/x-msvideo';
-                break;
-            default:
-                mimeType = 'video/mp4';
-        }
-        
+        let mimeType = 'video/mp4'; // Default to mp4
+        if (targetFormat === 'webm') mimeType = 'video/webm';
+        else if (targetFormat === 'avi') mimeType = 'video/x-msvideo';
         return new Blob([arrayBuffer], { type: mimeType });
     }
 
     /**
-     * Fallback conversion for unsupported format pairs
-     * @param {File} file - The file to convert
-     * @param {string} targetFormat - The target format
-     * @returns {Promise<Blob>} - A promise that resolves to the "converted" file as a Blob
+     * Fallback conversion for unsupported format pairs.
+     * This typically just changes the MIME type without actual content conversion.
+     * @param {File} file - The file to "convert".
+     * @param {string} targetFormat - The target format.
+     * @returns {Promise<Blob>} - A promise that resolves to the "converted" file as a Blob.
      */
     async fallbackConversion(file, targetFormat) {
-        console.warn('Using fallback conversion - this will not actually convert the file content');
+        console.warn(`Using fallback conversion for ${file.name} to ${targetFormat}. This will not actually convert the file content, only attempt to set a MIME type.`);
         const arrayBuffer = await file.arrayBuffer();
         
-        // Determine a generic MIME type based on the target format
-        let mimeType;
-        switch (targetFormat) {
-            case 'pdf':
-                mimeType = 'application/pdf';
-                break;
-            case 'docx':
-                mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
-                break;
-            case 'txt':
-                mimeType = 'text/plain';
-                break;
-            case 'jpg':
-            case 'jpeg':
-                mimeType = 'image/jpeg';
-                break;
-            case 'png':
-                mimeType = 'image/png';
-                break;
-            case 'mp3':
-                mimeType = 'audio/mpeg';
-                break;
-            case 'mp4':
-                mimeType = 'video/mp4';
-                break;
-            default:
-                mimeType = 'application/octet-stream';
+        let mimeType = 'application/octet-stream'; // Generic default
+        switch (targetFormat.toLowerCase()) {
+            case 'pdf': mimeType = 'application/pdf'; break;
+            case 'docx': mimeType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'; break;
+            case 'txt': mimeType = 'text/plain'; break;
+            case 'jpg': case 'jpeg': mimeType = 'image/jpeg'; break;
+            case 'png': mimeType = 'image/png'; break;
+            case 'webp': mimeType = 'image/webp'; break;
+            case 'svg': mimeType = 'image/svg+xml'; break;
+            case 'mp3': mimeType = 'audio/mpeg'; break;
+            case 'wav': mimeType = 'audio/wav'; break;
+            case 'mp4': mimeType = 'video/mp4'; break;
+            case 'webm': mimeType = 'video/webm'; break;
+            // Add other common types as needed
         }
         
         return new Blob([arrayBuffer], { type: mimeType });
     }
 }
 
-// Export the converter class
-window.FormatConverter = FormatConverter;
+// Export the converter class to the window scope if this script is included directly in HTML
+if (typeof window !== 'undefined') {
+    window.FormatConverter = FormatConverter;
+}
